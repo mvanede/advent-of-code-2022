@@ -1,5 +1,5 @@
 import unittest
-from . import grid
+from utils import grid
 
 
 class MyTestCase(unittest.TestCase):
@@ -96,6 +96,20 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(['f', 'e', 'd'], grid_under_test.get_row(1))
         self.assertEqual(['c', 'b', 'a'], grid_under_test.get_row(2))
 
+    def test_flip_horizontal(self):
+        grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
+        grid_under_test.flip_horizontal()
+        self.assertEqual(['g', 'h', 'i'], grid_under_test.get_row(0))
+        self.assertEqual(['d', 'e', 'f'], grid_under_test.get_row(1))
+        self.assertEqual(['a', 'b', 'c'], grid_under_test.get_row(2))
+
+    def test_flip_vertical(self):
+        grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
+        grid_under_test.flip_vertical()
+        self.assertEqual(['c', 'b', 'a'], grid_under_test.get_row(0))
+        self.assertEqual(['f', 'e', 'd'], grid_under_test.get_row(1))
+        self.assertEqual(['i', 'h', 'g'], grid_under_test.get_row(2))
+
     """
     SUM AND PRODUCT methods
     """
@@ -162,6 +176,28 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual(['Z', 'Z', 'c'], grid_under_test.get_row(0))
         self.assertEqual(['Z', 'e', 'f'], grid_under_test.get_row(1))
         self.assertEqual(['g', 'h', 'i'], grid_under_test.get_row(2))
+
+    """
+    FINDING AND ADJACENT
+    """
+    def test_adjacent_diagonal(self):
+        grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
+        self.assertEqual(['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i'], grid_under_test.get_adjacent(1,1))
+        self.assertEqual(['b', 'd', 'e'], grid_under_test.get_adjacent(0, 0))
+        self.assertEqual(['b','c', 'e', 'h', 'i'], grid_under_test.get_adjacent(1, 2))
+
+    def test_adjacent_exclude_diagonal(self):
+        grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
+        self.assertEqual(['b', 'd', 'f', 'h'], grid_under_test.get_adjacent(1,1, False))
+        self.assertEqual(['b', 'd' ], grid_under_test.get_adjacent(0, 0, False))
+        self.assertEqual(['c', 'e', 'i'], grid_under_test.get_adjacent(1, 2, False))
+
+    def test_find_all(self):
+        grid_under_test = grid.Grid(self._alpha_grid_common_input)
+        self.assertEqual([(0, 0), (0, 1), (1, 0)], grid_under_test.find_all('a'))
+        self.assertEqual([(2, 2)], grid_under_test.find_all('i'))
+        self.assertEqual([], grid_under_test.find_all('foobar'))
+
 
 if __name__ == '__main__':
     unittest.main()
