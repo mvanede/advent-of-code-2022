@@ -1,5 +1,6 @@
 from collections import Counter
 import math
+import copy
 
 
 class NoMostCommonException(Exception):
@@ -14,11 +15,11 @@ class Grid:
     _grid = [[]]
 
     def __init__(self, grid: [[]]):
-        self._grid = grid
+        self._grid = copy.deepcopy(grid)
 
     @classmethod
-    def init_with(self, width, height, default_value=None):
-        return self( [[default_value] * (width+1) for i in range(height+1)])
+    def init_with(cls, width, height, default_value=None):
+        return cls([[default_value] * (width + 1) for i in range(height + 1)])
 
     @property
     def grid(self):
@@ -129,6 +130,9 @@ class Grid:
     def get_sum(self):
         return sum([int(i) for i in self.flatten()])
 
+    def get_sum_if(self, if_func):
+        return sum(x if if_func(x) else 0 for x in self.flatten())
+
     def get_row_prod(self, row_idx):
         return math.prod([int(i) for i in self.get_row(row_idx)])
 
@@ -179,7 +183,7 @@ class Grid:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret.append(self.get(pos_row, pos_col))
+                ret.append(self.get(pos_col, pos_row))
         return ret
 
     def find_all(self, val):

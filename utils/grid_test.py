@@ -147,11 +147,11 @@ class MyTestCase(unittest.TestCase):
 
     def test_add(self):
         grid_under_test = grid.Grid(self._int_grid_common_input)
-        self.assertEqual(7, grid_under_test.add_at(1,1, 2).get(1,1))
+        self.assertEqual(7, grid_under_test.add_at(1, 1, 2).get(1,1))
 
     def test_substract(self):
         grid_under_test = grid.Grid(self._int_grid_common_input)
-        self.assertEqual(3, grid_under_test.add_at(1,1, 2).get(1,1))
+        self.assertEqual(3, grid_under_test.substract_at(1, 1, 2).get(1,1))
 
     """
     REPLACE methods
@@ -184,17 +184,17 @@ class MyTestCase(unittest.TestCase):
         grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
         self.assertEqual(['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i'], grid_under_test.get_adjacent(1,1))
         self.assertEqual(['b', 'd', 'e'], grid_under_test.get_adjacent(0, 0))
-        self.assertEqual(['b','c', 'e', 'h', 'i'], grid_under_test.get_adjacent(1, 2))
+        self.assertEqual(['b','c', 'e', 'h', 'i'], grid_under_test.get_adjacent(2, 1))
 
     def test_adjacent_exclude_diagonal(self):
         grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
         self.assertEqual(['b', 'd', 'f', 'h'], grid_under_test.get_adjacent(1,1, False))
         self.assertEqual(['b', 'd' ], grid_under_test.get_adjacent(0, 0, False))
-        self.assertEqual(['c', 'e', 'i'], grid_under_test.get_adjacent(1, 2, False))
+        self.assertEqual(['c', 'e', 'i'], grid_under_test.get_adjacent(2, 1, False))
 
     def test_find_all(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)
-        self.assertEqual([(0, 0), (0, 1), (1, 0)], grid_under_test.find_all('a'))
+        self.assertEqual([(0, 0), (1, 0), (0, 1)], grid_under_test.find_all('a'))
         self.assertEqual([(2, 2)], grid_under_test.find_all('i'))
         self.assertEqual([], grid_under_test.find_all('foobar'))
 

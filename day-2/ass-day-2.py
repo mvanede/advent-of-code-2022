@@ -1,6 +1,7 @@
+from utils import Parser
 f = open("ass-day-2-input.txt", "r")
-lines = f.read().split("\n")
-commands = [line.split(" ") for line in lines]
+commands = Parser.split_by(f.read(), "\n", " ", conv_func=None )
+
 
 x,y = 0,0
 for c in commands:

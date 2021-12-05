@@ -1,43 +1,35 @@
+from utils import Parser, Grid
+from typing import List
+
+
 f = open("ass-day-4-input.txt", "r")
-lines = f.read().split("\n\n")
+lines = Parser.split_by(f.read(), "\n\n", conv_func=None)
 numbers = lines[0].split(',')
-
-boards = []
-for l in lines[1:]:
-    board = [sl.split() for sl in l.split("\n") ]
-    boards.append(board)
+boards = [Grid(b) for b in Parser.split_by(lines[1:], "\n", None, conv_func=lambda x:int(x))]
 
 
-def has_bingo_row(board):
-    for row in board:
+def has_bingo_row(board:Grid):
+    for row in board.rows:
         uniq = list(set(row))
         if uniq[0] == '-' and len(uniq) == 1:
             return True
 
-def has_bingo_col(board):
-    for i in range(0, len(board[0])):
-        col = [row[i] for row in board]
-        if has_bingo_row([col]):
+
+def has_bingo_col(board:Grid):
+    for col in board.cols:
+        uniq = list(set(col))
+        if uniq[0] == '-' and len(uniq) == 1:
             return True
     return False
 
 
-def get_board_sum(board):
-    return sum([sum([int(i) for i in row if i!='-']) for row in board])
-
-
-def play(_numbers, _boards):
+def play(_numbers, _boards:List[Grid]):
     for n in _numbers:
         for _board in _boards:
-            for row in _board:
-                try:
-                    row[row.index(n)] = '-'
-                except ValueError:
-                    pass
+            _board.replace_all(int(n), '-')
 
             if has_bingo_row(_board) or has_bingo_col(_board):
-                print("BINGO at " + n )
-                return get_board_sum(_board) * int(n)
+                return _board.get_sum_if(lambda x:x!='-') * int(n)
 
 
 print (play(numbers, boards))

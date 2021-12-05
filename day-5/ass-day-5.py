@@ -2,7 +2,7 @@ from utils import Parser, Grid
 from utils.lib import max_in_list
 
 f = open("ass-day-5-input.txt", "r")
-coordinates = Parser.split_by(f.read(), lambda x:int(x),  "\n", " -> ", ",")
+coordinates = Parser.split_by(f.read(),  "\n", " -> ", ",", conv_func=lambda x:int(x))
 mx = max_in_list(coordinates)
 grid = Grid.init_with(mx, mx, 0)
 
