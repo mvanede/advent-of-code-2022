@@ -1,12 +1,12 @@
 from pathlib import Path
 
-
-base_name = "day-" + input("Which day do you want to start?")
+year, day = input("Which year/day do you want to start?").split("/")
+base_name = "day-" + day
 
 # Create subdir
-p = Path(base_name)
+p = Path.joinpath(Path(year), base_name)
 try:
-    p.mkdir(parents=False, exist_ok=False)
+    p.mkdir(parents=True, exist_ok=False)
 except FileExistsError:
     print("Day already exists!")
     exit()

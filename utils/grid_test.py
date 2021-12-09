@@ -182,15 +182,15 @@ class MyTestCase(unittest.TestCase):
     """
     def test_adjacent_diagonal(self):
         grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
-        self.assertEqual(['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i'], grid_under_test.get_adjacent(1,1))
-        self.assertEqual(['b', 'd', 'e'], grid_under_test.get_adjacent(0, 0))
-        self.assertEqual(['b','c', 'e', 'h', 'i'], grid_under_test.get_adjacent(2, 1))
+        self.assertEqual(['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i'], list(grid_under_test.get_adjacent(1,1).values()))
+        self.assertEqual(['b', 'd', 'e'], list(grid_under_test.get_adjacent(0, 0).values()))
+        self.assertEqual(['b','c', 'e', 'h', 'i'], list(grid_under_test.get_adjacent(2, 1).values()))
 
     def test_adjacent_exclude_diagonal(self):
         grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
-        self.assertEqual(['b', 'd', 'f', 'h'], grid_under_test.get_adjacent(1,1, False))
-        self.assertEqual(['b', 'd' ], grid_under_test.get_adjacent(0, 0, False))
-        self.assertEqual(['c', 'e', 'i'], grid_under_test.get_adjacent(2, 1, False))
+        self.assertEqual(['b', 'd', 'f', 'h'], list(grid_under_test.get_adjacent(1,1, False).values()))
+        self.assertEqual(['b', 'd' ], list(grid_under_test.get_adjacent(0, 0, False).values()))
+        self.assertEqual(['c', 'e', 'i'], list(grid_under_test.get_adjacent(2, 1, False).values()))
 
     def test_find_all(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)

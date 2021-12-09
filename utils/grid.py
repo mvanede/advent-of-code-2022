@@ -46,7 +46,7 @@ class Grid:
     """
 
     def get(self, col_idx: int, row_idx: int):
-        return self._grid[row_idx][col_idx]
+       return self._grid[row_idx][col_idx]
 
     def get_row(self, row_idx: int):
         return self._grid[row_idx]
@@ -176,15 +176,17 @@ class Grid:
     FINDING AND ADJACENT
     """
     def get_adjacent(self, col_idx:int, row_idx:int, include_diagonal=True):
-        ret = []
-        for pos_row in range(max(row_idx - 1, 0), min(row_idx + 2, self.width)):
-            for pos_col in range(max(col_idx - 1, 0), min(col_idx + 2, self.height)):
+        ret = {}
+        for pos_row in range(max(row_idx - 1, 0), min(row_idx + 2, self.height)):
+            for pos_col in range(max(col_idx - 1, 0), min(col_idx + 2, self.width)):
                 if pos_row == row_idx and pos_col == col_idx:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret.append(self.get(pos_col, pos_row))
+                ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
         return ret
+
+
 
     def find_all(self, val):
         return [(idx_col, idx_row) for idx_row, row in enumerate(self._grid) for idx_col, y in enumerate(row) if val == y]
