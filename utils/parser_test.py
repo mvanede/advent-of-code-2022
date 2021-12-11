@@ -43,8 +43,19 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(5, len(parsed[1]))
         self.assertEqual(5, len(parsed[1][1]))
         self.assertEqual(69, sum(parsed[1][4]))
-
         f.close()
+
+    def test_case5_single_line_chars(self):
+        parsed = Parser.split_by('abcdef', '', conv_func=None)
+        self.assertEqual(6, len(parsed))
+        self.assertEqual('a', parsed[0])
+        self.assertEqual('f', parsed[5])
+
+    def test_case6_single_line_ints(self):
+        parsed = Parser.split_by('123456', '', conv_func=lambda x:int(x))
+        self.assertEqual(6, len(parsed))
+        self.assertEqual(21, sum(parsed))
+
 
 
 if __name__ == '__main__':

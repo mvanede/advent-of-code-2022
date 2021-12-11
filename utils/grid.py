@@ -55,6 +55,18 @@ class Grid:
         return [row[col_idx] for row in self._grid]
         # return list(list(zip(*self._grid))[col_idx])
 
+    def get_cells(self):
+        retval = {}
+        for row_idx in range(0, self.height):
+            for col_idx in range(0, self.width):
+                retval[(col_idx, row_idx)] = self.get(col_idx, row_idx)
+        return retval
+
+    def get_copy(self):
+        return Grid(copy.deepcopy(self._grid))
+
+
+
     """
     MOST AND LEAST COMMON methods
     """

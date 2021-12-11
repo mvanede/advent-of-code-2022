@@ -13,7 +13,10 @@ class Parser:
                 return list(map(conv_func, input))[0] if conv_func else input
 
         if type(input) is not list:
-            return cls.split_by(input.split(args[0]), *args[1:], conv_func=conv_func)
+            if args[0] == '':
+                return cls.split_by(list(input), *args[1:], conv_func=conv_func)
+            else:
+                return cls.split_by(input.split(args[0]), *args[1:], conv_func=conv_func)
 
         ret_val = []
         for line in input:

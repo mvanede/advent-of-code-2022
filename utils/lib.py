@@ -15,3 +15,7 @@ def pruntime(start_timer):
 
 def panswer(a):
     print("ANSWER: {}".format(str(a)))
+
+
+def get_elements_of_length(l, lst):
+    return list(filter(lambda x: len(x)==l, lst))
