@@ -6,7 +6,7 @@ f = open("ass-day-11-input.txt", "r")
 grid = Parser.split_by(f.read(), "\n", '', conv_func=lambda x:int(x))
 
 octopuses = Grid(grid)
-octopuses.pprint()
+octopuses.print()
 
 
 def flash(_local_grid, col_idx, row_idx):
@@ -21,13 +21,13 @@ def flash(_local_grid, col_idx, row_idx):
 
 def round(_local_grid: Grid):
     # First, the energy level of each octopus increases by 1.
-    for col_idx, row_idx in _local_grid.get_cells():
+    for col_idx, row_idx in _local_grid.cells:
         if _local_grid.get(col_idx, row_idx) <= 9:
             _local_grid.add_at(col_idx, row_idx, 1)
 
     # Then, any octopus with an energy level greater than 9 flashes.This increases the energy level of all adjacent octopuses by 1
     _grid_copy = _local_grid.get_copy()
-    for col_idx, row_idx in _grid_copy.get_cells():
+    for col_idx, row_idx in _grid_copy.cells:
         v = _local_grid.get(col_idx, row_idx)
         if v == 10:
             flash(_grid_copy, col_idx, row_idx)
@@ -35,7 +35,7 @@ def round(_local_grid: Grid):
 
     # Finally, any octopus that flashed during this step has its energy level set to 0, as it used all of its energy to flash.
     nr_flashes = 0
-    for col_idx, row_idx in _local_grid.get_cells().keys():
+    for col_idx, row_idx in _local_grid.cells.keys():
         v = _local_grid.get(col_idx, row_idx)
         if v > 9:
             _local_grid.set(col_idx, row_idx, 0)
@@ -48,7 +48,7 @@ nr_flashes = 0
 for i in range(0, 100):
     print ("ROUND " + str(i+1))
     octopuses, _nr_flashes = round(octopuses)
-    octopuses.pprint()
+    octopuses.print()
     nr_flashes += _nr_flashes
 
 panswer(nr_flashes)

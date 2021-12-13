@@ -56,7 +56,11 @@ class ParserTestCase(unittest.TestCase):
         self.assertEqual(6, len(parsed))
         self.assertEqual(21, sum(parsed))
 
-
+    def test_case7_10_to_int(self):
+        parsed = Parser.split_by('1x1x10','\n', 'x', conv_func=lambda x: int(x))
+        self.assertEqual(1, len(parsed))
+        self.assertEqual(3, len(parsed[0]))
+        self.assertEqual(12, sum(parsed[0]))
 
 if __name__ == '__main__':
     unittest.main()

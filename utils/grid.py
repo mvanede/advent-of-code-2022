@@ -41,6 +41,14 @@ class Grid:
     def cols(self):
         return [list(col) for col in (list(zip(*self._grid)))]
 
+    @property
+    def cells(self):
+        retval = {}
+        for row_idx in range(0, self.height):
+            for col_idx in range(0, self.width):
+                retval[(col_idx, row_idx)] = self.get(col_idx, row_idx)
+        return retval
+
     """
     GET methods
     """
@@ -51,16 +59,15 @@ class Grid:
     def get_row(self, row_idx: int):
         return self._grid[row_idx]
 
+    def get_rows(self, start_idx: int, end_idx:int):
+        return self._grid[start_idx:end_idx]
+
     def get_col(self, col_idx: int):
         return [row[col_idx] for row in self._grid]
         # return list(list(zip(*self._grid))[col_idx])
 
-    def get_cells(self):
-        retval = {}
-        for row_idx in range(0, self.height):
-            for col_idx in range(0, self.width):
-                retval[(col_idx, row_idx)] = self.get(col_idx, row_idx)
-        return retval
+    def get_cols(self, start_idx: int, end_idx:int):
+        return [row[start_idx:end_idx] for row in self._grid]
 
     def get_copy(self):
         return Grid(copy.deepcopy(self._grid))
@@ -180,9 +187,16 @@ class Grid:
         return self
 
     def replace_all(self, old_val, new_val):
-        for i in range(0, len(self._grid[0])):
+        for i in range(0, self.height):
             self.replace_in_row(i, old_val, new_val)
         return self
+
+    def remove_row(self, row_id):
+        del self._grid[row_id]
+
+    def remove_col(self, col_id):
+        for row in self.rows:
+            del row[col_id]
 
     """
     FINDING AND ADJACENT
@@ -224,10 +238,14 @@ class Grid:
     """
     ETC
     """
+    def print(self, sep='\n'):
+        print(*self._grid, sep=sep)
 
-    def pprint(self):
-        print(*self._grid, sep='\n')
-        print("\n")
+    def pprint(self, sep='', end=''):
+        for row in self.rows:
+            for col in row:
+                print (sep.join(str(col)), end=end)
+            print("")
 
     def flatten(self):
         return [el for row in self._grid for el in row]

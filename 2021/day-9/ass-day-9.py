@@ -9,7 +9,7 @@ print(commands)
 
 # Fix
 floor = Grid(commands)
-floor.pprint()
+floor.print()
 
 # CODE HERE
 # print(floor.height)
