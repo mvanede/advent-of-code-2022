@@ -198,6 +198,12 @@ class MyTestCase(unittest.TestCase):
         self.assertEqual([(2, 2)], grid_under_test.find_all('i'))
         self.assertEqual([], grid_under_test.find_all('foobar'))
 
+    def test_merge_right(self):
+        grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
+        grid2 = grid.Grid(self._alpha_grid_rotate_input)
+
+        grid_under_test.merge_right(grid2)
+
 
 if __name__ == '__main__':
     unittest.main()

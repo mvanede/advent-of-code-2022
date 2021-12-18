@@ -38,7 +38,7 @@ def round(_local_grid: Grid):
     for col_idx, row_idx in _local_grid.cells.keys():
         v = _local_grid.get(col_idx, row_idx)
         if v > 9:
-            _local_grid.set(col_idx, row_idx, 0)
+            _local_grid.charset(col_idx, row_idx, 0)
             nr_flashes +=1
 
     return _local_grid, nr_flashes

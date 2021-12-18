@@ -169,6 +169,13 @@ class Grid:
         self._grid[row_idx][col_idx] -= val
         return self
 
+    def add_all(self, add_val, conv_func = None):
+        for col, row in self.cells.keys():
+            v = self.get(col, row) + add_val
+            if conv_func:
+                v = conv_func(v)
+            self.set(col, row, v)
+
     """
     REPLACE andd SET methods
     """
@@ -212,7 +219,16 @@ class Grid:
                 ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
         return ret
 
-
+    def get_adjacent_bottom_right(self, col_idx:int, row_idx:int, include_diagonal=True):
+        ret = {}
+        for pos_row in range(max(row_idx, 0), min(row_idx + 2, self.height)):
+            for pos_col in range(max(col_idx, 0), min(col_idx + 2, self.width)):
+                if pos_row == row_idx and pos_col == col_idx:
+                    continue
+                if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
+                    continue
+                ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
+        return ret
 
     def find_all(self, val):
         return [(idx_col, idx_row) for idx_row, row in enumerate(self._grid) for idx_col, y in enumerate(row) if val == y]
@@ -234,6 +250,11 @@ class Grid:
         for v in self.get_uniq_values():
             ret.append((v, self.find_all(v)))
         return ret
+
+    """
+    MERGE
+    """
+
 
     """
     ETC
