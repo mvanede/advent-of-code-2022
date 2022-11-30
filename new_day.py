@@ -1,7 +1,7 @@
 from pathlib import Path
 
 year, day = input("Which year/day do you want to start?").split("/")
-base_name = "day_" + day
+base_name = "day-" + day
 
 # Create subdir
 p = Path.joinpath(Path(year), base_name)
