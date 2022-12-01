@@ -1,10 +1,12 @@
 from pathlib import Path
+from string import Template
+
 
 year, day = input("Which year/day do you want to start?").split("/")
-base_name = "day-" + day
+day = day.zfill(2)
 
 # Create subdir
-p = Path.joinpath(Path(year), base_name)
+p = Path.joinpath(Path(year), "day_" + day )
 try:
     p.mkdir(parents=True, exist_ok=False)
 except FileExistsError:
@@ -12,23 +14,11 @@ except FileExistsError:
     exit()
 
 # Create files
-first_lines = """from utils import Parser
-from utils.lib import get_timer, panswer, pruntime
-_ST = get_timer()
+with open('new_day.template', 'r') as f:
+    src = Template(f.read())
+    t = src.substitute({'day': day})
 
-f = open("ass_{}_test_input.txt", "r")
-commands = Parser.split_by(f.read(), "\\n", conv_func=None)  # lambda x:int(x)
-
-# CODE HERE
-
-
-panswer("answer")
-pruntime(_ST)
-
-
-""".format(base_name)
-
-(p / ("ass_" + base_name + "_input.txt")).write_text('', encoding="utf-8")
-(p / ("ass_" + base_name + "_test_input.txt")).write_text('', encoding="utf-8")
-(p / ("ass_" + base_name + ".py")).write_text(first_lines, encoding="utf-8")
-(p / ("ass_" + base_name + "_2.py")).write_text(first_lines, encoding="utf-8")
+(p / ("day_" + day + "_input.txt")).write_text('', encoding="utf-8")
+(p / ("day_" + day + "_test_input.txt")).write_text('', encoding="utf-8")
+(p / ("day_" + day + ".py")).write_text(t, encoding="utf-8")
+(p / ("day_" + day + "_2.py")).write_text(t, encoding="utf-8")

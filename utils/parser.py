@@ -1,8 +1,17 @@
 from pprint import pprint
+from utils.grid import Grid
+
+
 class Parser:
     @classmethod
-    def to_int_grid(cls):
-        return ""
+    def get_int_grid(cls, _input ):
+        grid = cls.split_by(_input, "\n", " ", conv_func=lambda x: int(x))
+        pprint(grid)
+        return Grid(grid)
+
+    @classmethod
+    def group_by_double_newline(cls, _input, conv_func=None):
+        return cls.split_by(_input, "\n\n", "\n", conv_func=conv_func)
 
     @classmethod
     def split_by(cls, _input, *args, conv_func=None):
