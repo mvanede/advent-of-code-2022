@@ -10,17 +10,9 @@ _ST = get_timer()
 
 # CODE HERE
 class Day01Solution(BaseSolution, ABC):
-    _input = "day_01_input.txt"
-    _test_input = "day_01_test_input.txt"
-    use_test_input = True
-
-    def __init__(self, use_test_input):
-        self.food = None
-        self.use_test_input = use_test_input
-        self.parse_input()
-
-    def path_to_input(*args, **kwargs):
-        return os.path.dirname(__file__)
+    _input = "2022/day_01/day_01_input.txt"
+    _test_input = "2022/day_01/day_01_test_input.txt"
+    food = None
 
     def parse_input(self):
         self.food = Parser.group_by_double_newline(self.read_input(), conv_func=lambda x:int(x))  # lambda x:int(x)

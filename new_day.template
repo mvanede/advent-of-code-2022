@@ -10,17 +10,11 @@ _ST = get_timer()
 
 # CODE HERE
 class Day${day}Solution(BaseSolution, ABC):
-    _input = "day_${day}_input.txt"
-    _test_input = "day_${day}_test_input.txt"
-    use_test_input = True
+    _input = "2022/day_${day}/day_${day}_input.txt"
+    _test_input = "2022/day_${day}/day_${day}_test_input.txt"
 
-    def __init__(self, use_test_input):
-        self.food = None
-        self.use_test_input = use_test_input
-        self.parse_input()
-
-    def path_to_input(*args, **kwargs):
-        return os.path.dirname(__file__)
+    # def __init__(self, use_test_input):
+    #     super().method(use_test_input)
 
     def parse_input(self):
         self.food = Parser.split_by(self.read_input(), "\n", conv_func=None)  # lambda x:int(x)
