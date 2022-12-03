@@ -1,5 +1,3 @@
-import os
-import sys
 from abc import ABC
 
 from utils import Parser
