@@ -3,6 +3,7 @@ from day_01 import Day01Solution
 from day_02 import Day02Solution
 from day_03 import Day03Solution
 from day_04 import Day04Solution
+from day_05 import Day05Solution
 
 class AoCTestCase(unittest.TestCase):
 
@@ -25,6 +26,11 @@ class AoCTestCase(unittest.TestCase):
         s = Day04Solution(use_test_input=False)
         assert s.solve1() == 518
         assert s.solve2() == 909
+        
+    def test_day_05(self):
+        s = Day05Solution(use_test_input=False)
+        assert s.solve1() == 'TDCHVHJTG'
+        assert s.solve2() == 'NGCMPJLHV'
 
 
 if __name__ == '__main__':
