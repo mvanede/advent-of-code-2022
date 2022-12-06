@@ -19,8 +19,8 @@ class Day05Solution(BaseSolution, ABC):
 
     def parse_input(self):
         stack_lines, move_lines = Parser.split_by(self.read_input(), "\n\n","\n", conv_func=None)  # lambda x:int(x)
-        _stack_labels = stack_lines[-1]
-        _crates = stack_lines[:-1]
+        _stack_labels = stack_lines.pop()
+        _crates = stack_lines
 
         # Columns have a fixed with of 4 (3, plus space between). We need use this line
         # since we can't be sure every stack is filled (though in practice they are ;)
@@ -56,17 +56,13 @@ class Day05Solution(BaseSolution, ABC):
                 self.stacks[to-1].append(self.stacks[frm-1].pop())
 
         return self.format_answer()
-
+    
     def solve2(self):
         self.reset()
 
         for nr, frm, to in self.moves:
-            to_move = []
-            # Get the entire (sub)stack of crates to move first
-            for i in range(nr):
-                to_move.insert(0, self.stacks[frm - 1].pop())
-            # Move entire (sub)stack
-            self.stacks[to - 1] += to_move
+            self.stacks[to - 1] += self.stacks[frm - 1][-nr:]
+            del self.stacks[frm - 1][-nr:]
 
         return self.format_answer()
 
