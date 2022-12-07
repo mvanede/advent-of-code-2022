@@ -18,11 +18,17 @@ class MyTestCase(unittest.TestCase):
     """
     GET methods
     """
+
     def test_get(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)
         self.assertEqual('a', grid_under_test.get(0, 0))
         self.assertEqual('e', grid_under_test.get(1, 1))
         self.assertEqual('i', grid_under_test.get(2, 2))
+
+    def test_cells(self):
+        grid_under_test = grid.Grid(self._alpha_grid_common_input)
+        first_cell = next(iter(grid_under_test.cells))
+        self.assertEqual(0, first_cell.x)
 
     def test_get_row(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)

@@ -2,8 +2,6 @@ from collections import Counter, namedtuple
 import math
 import copy
 
-import heapdict
-
 
 class NoMostCommonException(Exception):
     pass
@@ -14,7 +12,6 @@ class NoLeastCommonException(Exception):
 
 
 Coord = namedtuple('Coord', ['x', 'y'])
-
 
 class Grid:
     _grid = [[]]
@@ -63,7 +60,7 @@ class Grid:
         for row_idx in range(0, self.height):
             for col_idx in range(0, self.width):
                 if where_func(self.get(col_idx, row_idx)):
-                    retval[Coord(col_idx, row_idx)] = self.get(col_idx, row_idx)
+                    retval[(col_idx, row_idx)] = self.get(col_idx, row_idx)
         return retval
 
     """
@@ -241,7 +238,7 @@ class Grid:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret[Coord(pos_col, pos_row)] = self.get(pos_col, pos_row)
+                ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
         return ret
 
     def get_adjacent_bottom_right(self, col_idx: int, row_idx: int, include_diagonal=True):
@@ -252,11 +249,11 @@ class Grid:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret[Coord(pos_col, pos_row)] = self.get(pos_col, pos_row)
+                ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
         return ret
 
     def find_all(self, val):
-        return [Coord(idx_col, idx_row) for idx_row, row in enumerate(self._grid) for idx_col, y in enumerate(row) if
+        return [(idx_col, idx_row) for idx_row, row in enumerate(self._grid) for idx_col, y in enumerate(row) if
                 val == y]
 
     def get_uniq_values(self):
@@ -290,45 +287,6 @@ class Grid:
     """
     ETC
     """
-
-    """
-    DIJKSTRA
-    """
-
-    def dijkstra(self, src: Coord, dest: Coord, include_diagonal=False):
-        prev = {}
-
-        # Store lowest cost so far to get to this point
-        path_costs = {src: 0}
-
-        unvisited = heapdict.heapdict()
-        for cell in self.cells:
-            unvisited[cell] = math.inf
-
-        # Cost of starting point are zero
-        unvisited[src] = 0
-
-        while unvisited:
-            u, cost = unvisited.popitem()
-
-            # Get all neighbours
-            for neighbour in self.get_adjacent(u.x, u.y, include_diagonal=include_diagonal, include_self=False):
-                # Cost of path *TO* v are cost of path to u, plus cost of u (to v)
-                cost_of_path = path_costs.get(u, math.inf) + self.get(u.x, u.y)
-
-                if cost_of_path < path_costs.get(neighbour, math.inf):
-                    path_costs[neighbour] = cost_of_path
-                    unvisited[neighbour] = cost_of_path
-                    # Update the cheapest previous step for neighbour to u
-                    prev[neighbour] = u
-
-        path = [dest]
-        cur = dest
-        while prev.get(cur, None):
-            path.append(prev[cur])
-            cur = prev[cur]
-
-        return list(reversed(path))
 
     def print(self, sep='\n'):
         print(*self._grid, sep=sep)
