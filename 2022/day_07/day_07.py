@@ -63,7 +63,7 @@ class Day07Solution(BaseSolution, ABC):
         else:
             sum_subdirs = MapReduceList(dir.subdirs.values()) \
                 .map(lambda subdir: self.calculate_sum(subdir)) \
-                .reduce(lambda x, y: x + y)
+                .sum()
             dir.sum = sum(dir.files.values()) + sum_subdirs
 
         return dir.sum
@@ -72,7 +72,7 @@ class Day07Solution(BaseSolution, ABC):
         return MapReduceList(self.all_dirs) \
             .map(lambda x: x.sum) \
             .filter(lambda x: x < 100000) \
-            .reduce(lambda x, y: x + y)
+            .sum()
 
     def solve2(self):
         diskspice_to_gain = 30000000 - (70000000 - self.basedir.sum)

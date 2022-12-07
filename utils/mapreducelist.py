@@ -13,3 +13,6 @@ class MapReduceList(UserList):
     def filter(self, func):
         self.data = list(filter(func, self.data))
         return self
+
+    def sum(self):
+        return sum(self.data)
