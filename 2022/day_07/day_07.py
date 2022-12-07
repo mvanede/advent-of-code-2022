@@ -1,6 +1,6 @@
 from abc import ABC
 
-from utils import Parser
+from utils import Parser, MapReduceList
 from utils.lib import get_timer, answer, pruntime
 from utils.base_solution import BaseSolution
 
@@ -58,18 +58,28 @@ class Day07Solution(BaseSolution, ABC):
 
     def calculate_sum(self, dir):
         if not dir.subdirs:
-            dir.sum = sum(dir.files.values())
+            dir.sum = MapReduceList(dir.files.values()) \
+                .reduce(lambda x, y: x + y)
         else:
-            sums_subdirs = [self.calculate_sum(subdir) for subdir in dir.subdirs.values()]
-            dir.sum = sum(dir.files.values()) + sum(sums_subdirs)
+            sum_subdirs = MapReduceList(dir.subdirs.values()) \
+                .map(lambda subdir: self.calculate_sum(subdir)) \
+                .reduce(lambda x, y: x + y)
+            dir.sum = sum(dir.files.values()) + sum_subdirs
+
         return dir.sum
 
     def solve1(self):
-        return sum([d.sum for d in self.all_dirs if d.sum < 100000])
+        return MapReduceList(self.all_dirs) \
+            .map(lambda x: x.sum) \
+            .filter(lambda x: x < 100000) \
+            .reduce(lambda x, y: x + y)
 
     def solve2(self):
         diskspice_to_gain = 30000000 - (70000000 - self.basedir.sum)
-        return min([d.sum for d in self.all_dirs if d.sum >= diskspice_to_gain])
+        return MapReduceList(self.all_dirs) \
+            .map(lambda x: x.sum) \
+            .filter(lambda x: x >= diskspice_to_gain) \
+            .reduce(lambda x, y: min(x, y))
 
 
 if __name__ == '__main__':
