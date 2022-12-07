@@ -38,10 +38,7 @@ class Day07Solution(BaseSolution, ABC):
 
             if c.startswith('$ cd'):
                 goto = c[5:]
-                if goto == '..':
-                    current_dir = current_dir.parent
-                else:
-                    current_dir = current_dir.subdirs[goto]
+                current_dir = current_dir.parent if goto == '..' else current_dir.subdirs[goto]
             elif c.startswith('$ ls'):
                 # Read the next lines while there are and while next line is not a new command ('$')
                 while commands and not commands[-1].startswith('$'):
