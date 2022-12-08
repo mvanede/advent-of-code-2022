@@ -85,6 +85,20 @@ class Grid:
     def get_cols(self, start_idx: int, end_idx: int):
         return [row[start_idx:end_idx] for row in self._grid]
 
+    def get_left_of(self, coord: Coord, view_direction=False):
+        x = self.get_row(coord.y)[:coord.x]
+        return x[::-1] if view_direction else x
+
+    def get_right_of(self, coord: Coord):
+        return self.get_row(coord.y)[coord.x + 1:]
+
+    def get_above(self, coord: Coord, view_direction=False):
+        x = self.get_col(coord.x)[:coord.y]
+        return x[::-1] if view_direction else x
+
+    def get_below(self, coord: Coord):
+        return self.get_col(coord.x)[coord.y + 1:]
+
     def get_copy(self):
         return Grid(copy.deepcopy(self._grid))
 
