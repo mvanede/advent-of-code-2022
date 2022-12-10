@@ -7,8 +7,8 @@ _ST = get_timer()
 
 
 class Day08Solution(BaseSolution, ABC):
-    _input = "2022/day_08/day_08_input.txt"
-    _test_input = "2022/day_08/day_08_test_input.txt"
+    _input = "2022/day_08/day_08.input.txt"
+    _test_input = "2022/day_08/day_08_test.input.txt"
     MAX_TREE_HEIGHT = 9
     MIN_TREE_HEIGHT = 0
 

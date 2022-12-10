@@ -8,8 +8,8 @@ _ST = get_timer()
 
 # CODE HERE
 class Day${day}Solution(BaseSolution, ABC):
-    _input = "2022/day_${day}/day_${day}_input.txt"
-    _test_input = "2022/day_${day}/day_${day}_test_input.txt"
+    _input = "2022/day_${day}/day_${day}.input.txt"
+    _test_input = "2022/day_${day}/day_${day}_test.input.txt"
 
     # def __init__(self, use_test_input):
     #     super().method(use_test_input)

@@ -18,7 +18,7 @@ with open('new_day.template', 'r') as f:
     src = Template(f.read())
     t = src.substitute({'day': day})
 
-(p / ("day_" + day + "_input.txt")).write_text('', encoding="utf-8")
-(p / ("day_" + day + "_test_input.txt")).write_text('', encoding="utf-8")
+(p / ("day_" + day + ".input.txt")).write_text('', encoding="utf-8")
+(p / ("day_" + day + "_test.input.txt")).write_text('', encoding="utf-8")
 (p / ("day_" + day + ".py")).write_text(t, encoding="utf-8")
 (p / ("day_" + day + "_2.py")).write_text(t, encoding="utf-8")

@@ -7,6 +7,9 @@ from day_05 import Day05Solution
 from day_06 import Day06Solution
 from day_07 import Day07Solution
 
+from day_10 import Day10Solution
+
+
 class AoCTestCase(unittest.TestCase):
 
     def test_day_01(self):
@@ -43,6 +46,27 @@ class AoCTestCase(unittest.TestCase):
         s = Day07Solution(use_test_input=False)
         assert s.solve1() == 1086293
         assert s.solve2() == 366028
+
+    # def test_day_08(self):
+    #     s = Day07Solution(use_test_input=False)
+    #     assert s.solve1() == 1086293
+    #     assert s.solve2() == 366028
+
+    # def test_day_09(self):
+    #     s = Day07Solution(use_test_input=False)
+    #     assert s.solve1() == 1086293
+    #     assert s.solve2() == 366028
+
+    def test_day_10(self):
+        s = Day10Solution(use_test_input=False)
+        assert s.solve1() == 14820
+        s2 = s.solve2()
+        assert s2[0:40] == '###..####.####.#..#.####.####.#..#..##..'
+        assert s2[40:80] == '#..#....#.#....#.#..#....#....#..#.#..#.'
+        assert s2[80:120] == '#..#...#..###..##...###..###..####.#..#.'
+        assert s2[120:160] == '###...#...#....#.#..#....#....#..#.####.'
+        assert s2[160:200] == '#.#..#....#....#.#..#....#....#..#.#..#.'
+        assert s2[200:240] == '#..#.####.####.#..#.####.#....#..#.#..#.'
 
 
 if __name__ == '__main__':

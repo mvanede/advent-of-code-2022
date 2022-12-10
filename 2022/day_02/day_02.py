@@ -7,8 +7,8 @@ _ST = get_timer()
 
 
 class Day02Solution(BaseSolution, ABC):
-    _input = "2022/day_02/day_02_input.txt"
-    _test_input = "2022/day_02/day_02_test_input.txt"
+    _input = "2022/day_02/day_02.input.txt"
+    _test_input = "2022/day_02/day_02_test.input.txt"
     strategy = None
 
     def parse_input(self):

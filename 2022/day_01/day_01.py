@@ -10,12 +10,12 @@ _ST = get_timer()
 
 # CODE HERE
 class Day01Solution(BaseSolution, ABC):
-    _input = "2022/day_01/day_01_input.txt"
-    _test_input = "2022/day_01/day_01_test_input.txt"
+    _input = "2022/day_01/day_01.input.txt"
+    _test_input = "2022/day_01/day_01_test.input.txt"
     food = None
 
     def parse_input(self):
-        self.food = Parser.group_by_double_newline(self.read_input(), conv_func=lambda x:int(x))  # lambda x:int(x)
+        self.food = Parser.group_by_double_newline(self.read_input(), conv_func=lambda x: int(x))  # lambda x:int(x)
 
     def solve1(self):
         return max([sum(f) for f in self.food])

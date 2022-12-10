@@ -7,8 +7,8 @@ _ST = get_timer()
 
 
 class Day08Solution(BaseSolution, ABC):
-    _input = "2022/day_08/day_08_input.txt"
-    _test_input = "2022/day_08/day_08_test_input.txt"
+    _input = "2022/day_08/day_08.input.txt"
+    _test_input = "2022/day_08/day_08_test.input.txt"
     MAX_TREE_HEIGHT = 9
     MIN_TREE_HEIGHT = 0
 
@@ -34,7 +34,7 @@ class Day08Solution(BaseSolution, ABC):
 
     def get_scenic_score(self, c):
         col_idx, row_idx = c
-        tree = self.forrest.get(col_idx, row_idx)
+        tree_height = self.forrest.get(col_idx, row_idx)
 
         up = self.forrest.get_above(c, view_direction=True)
         down = self.forrest.get_below(c)
@@ -46,7 +46,7 @@ class Day08Solution(BaseSolution, ABC):
             score = 0
             for u in row:
                 score += 1
-                if u >= tree:
+                if u >= tree_height:
                     break
             total_score *= score
         return total_score

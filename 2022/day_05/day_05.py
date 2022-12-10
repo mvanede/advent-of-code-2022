@@ -11,14 +11,14 @@ _ST = get_timer()
 
 # CODE HERE
 class Day05Solution(BaseSolution, ABC):
-    _input = "2022/day_05/day_05_input.txt"
-    _test_input = "2022/day_05/day_05_test_input.txt"
+    _input = "2022/day_05/day_05.input.txt"
+    _test_input = "2022/day_05/day_05_test.input.txt"
     stacks = None
     _stacks = None
     moves = []
 
     def parse_input(self):
-        stack_lines, move_lines = Parser.split_by(self.read_input(), "\n\n","\n", conv_func=None)  # lambda x:int(x)
+        stack_lines, move_lines = Parser.split_by(self.read_input(), "\n\n", "\n", conv_func=None)  # lambda x:int(x)
         _stack_labels = stack_lines.pop()
         _crates = stack_lines
 

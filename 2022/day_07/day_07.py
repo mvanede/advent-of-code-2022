@@ -17,8 +17,8 @@ class Dir():
 
 
 class Day07Solution(BaseSolution, ABC):
-    _input = "2022/day_07/day_07_input.txt"
-    _test_input = "2022/day_07/day_07_test_input.txt"
+    _input = "2022/day_07/day_07.input.txt"
+    _test_input = "2022/day_07/day_07_test.input.txt"
     basedir = Dir('/')
 
     def __init__(self, use_test_input):

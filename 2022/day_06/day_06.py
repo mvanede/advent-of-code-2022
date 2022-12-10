@@ -6,8 +6,8 @@ _ST = get_timer()
 
 # CODE HERE
 class Day06Solution(BaseSolution, ABC):
-    _input = "2022/day_06/day_06_input.txt"
-    _test_input = "2022/day_06/day_06_test_input.txt"
+    _input = "2022/day_06/day_06.input.txt"
+    _test_input = "2022/day_06/day_06_test.input.txt"
     stream = None
     
     def parse_input(self):

@@ -7,12 +7,12 @@ _ST = get_timer()
 
 
 class Day04Solution(BaseSolution, ABC):
-    _input = "2022/day_04/day_04_input.txt"
-    _test_input = "2022/day_04/day_04_test_input.txt"
+    _input = "2022/day_04/day_04.input.txt"
+    _test_input = "2022/day_04/day_04_test.input.txt"
     assignments = None
 
     def parse_input(self):
-        self.assignments = Parser.split_by(self.read_input(), "\n", ",", "-", conv_func=lambda x:int(x))
+        self.assignments = Parser.split_by(self.read_input(), "\n", ",", "-", conv_func=lambda x: int(x))
 
     @staticmethod
     def get_list(_range):

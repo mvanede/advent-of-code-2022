@@ -7,12 +7,12 @@ from utils.base_solution import BaseSolution
 _ST = get_timer()
 
 class Day03Solution(BaseSolution, ABC):
-    _input = "2022/day_03/day_03_input.txt"
-    _test_input = "2022/day_03/day_03_test_input.txt"
+    _input = "2022/day_03/day_03.input.txt"
+    _test_input = "2022/day_03/day_03_test.input.txt"
     rucksacks = []
 
     def parse_input(self):
-        self.rucksacks = Parser.split_by(self.read_input(), "\n","", conv_func=None)  # lambda x:int(x)
+        self.rucksacks = Parser.split_by(self.read_input(), "\n", "", conv_func=None)  # lambda x:int(x)
 
     @staticmethod
     def get_prio(item):
