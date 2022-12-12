@@ -22,8 +22,10 @@ class Knot (Position):
             self.x += 1 if xdiff > 0 else -1
             self.y += 1 if ydiff > 0 else -1
         elif abs(xdiff) == 2:
+            # Move horizontal
             self.x += 1 if xdiff > 0 else -1
         elif abs(ydiff) == 2:
+            # Move vertical
             self.y += 1 if ydiff > 0 else -1
 
 

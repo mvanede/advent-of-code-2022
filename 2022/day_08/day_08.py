@@ -27,14 +27,14 @@ class Day08Solution(BaseSolution, ABC):
             max_left = max(self.forrest.get_left_of(c, view_direction=True) or [-1])
             max_right = max(self.forrest.get_right_of(c) or [-1])
 
-            tree_height = self.forrest.get(c.x, c.y)
+            tree_height = self.forrest.get(c)
             if tree_height > min(max_right, max_up, max_left, max_down):
                 visible_count += 1
         return visible_count
 
     def get_scenic_score(self, c):
-        col_idx, row_idx = c
-        tree_height = self.forrest.get(col_idx, row_idx)
+        # col_idx, row_idx = c
+        tree_height = self.forrest.get(c)
 
         up = self.forrest.get_above(c, view_direction=True)
         down = self.forrest.get_below(c)

@@ -2,6 +2,8 @@ from collections import Counter, namedtuple
 import math
 import copy
 
+import heapdict
+
 
 class NoMostCommonException(Exception):
     pass
@@ -13,6 +15,7 @@ class NoLeastCommonException(Exception):
 
 Coord = namedtuple('Coord', ['x', 'y'])
 
+
 class Grid:
     _grid = [[]]
 
@@ -21,11 +24,11 @@ class Grid:
             self._grid = copy.deepcopy(args[0])
         elif isinstance(args[0], int) and isinstance(args[1], int):
             self._default_value = kwargs['default_value'] if 'default_value' in kwargs else 0
-            super().__init__([([self._default_value] * args[0]) for i in range(args[1])])
+            super().__init__([([self._default_value] * args[0]) for _ in range(args[1])])
 
     @classmethod
     def init_with(cls, width, height, default_value=None):
-        return cls([[default_value] * width for i in range(height)])
+        return cls([[default_value] * width for _ in range(height)])
 
     @property
     def grid(self):
@@ -52,7 +55,8 @@ class Grid:
         retval = {}
         for row_idx in range(0, self.height):
             for col_idx in range(0, self.width):
-                retval[Coord(col_idx, row_idx)] = self.get(col_idx, row_idx)
+                c = Coord(col_idx, row_idx)
+                retval[c] = self.get(c)
         return retval
 
     def cells_where(self, where_func):
@@ -60,15 +64,16 @@ class Grid:
         for row_idx in range(0, self.height):
             for col_idx in range(0, self.width):
                 if where_func(self.get(col_idx, row_idx)):
-                    retval[(col_idx, row_idx)] = self.get(col_idx, row_idx)
+                    c = Coord(col_idx, row_idx)
+                    retval[c] = self.get(c)
         return retval
 
     """
     GET methods
     """
 
-    def get(self, col_idx: int, row_idx: int):
-        return self._grid[row_idx][col_idx]
+    def get(self, coord: Coord):
+        return self._grid[coord.y][coord.x]
 
     def get_row(self, row_idx: int):
         return self._grid[row_idx]
@@ -81,6 +86,20 @@ class Grid:
 
     def get_cols(self, start_idx: int, end_idx: int):
         return [row[start_idx:end_idx] for row in self._grid]
+
+    def get_left_of(self, coord: Coord, view_direction=False):
+        x = self.get_row(coord.y)[:coord.x]
+        return x[::-1] if view_direction else x
+
+    def get_right_of(self, coord: Coord):
+        return self.get_row(coord.y)[coord.x + 1:]
+
+    def get_above(self, coord: Coord, view_direction=False):
+        x = self.get_col(coord.x)[:coord.y]
+        return x[::-1] if view_direction else x
+
+    def get_below(self, coord: Coord):
+        return self.get_col(coord.x)[coord.y + 1:]
 
     def get_copy(self):
         return Grid(copy.deepcopy(self._grid))
@@ -230,30 +249,36 @@ class Grid:
     FINDING AND ADJACENT
     """
 
-    def get_adjacent(self, col_idx: int, row_idx: int, include_diagonal=True, include_self=False):
+    def get_adjacent(self, coord: Coord, include_diagonal=True, include_self=False):
         ret = {}
+        col_idx = coord.y
+        row_idx = coord.x
         for pos_row in range(max(row_idx - 1, 0), min(row_idx + 2, self.height)):
             for pos_col in range(max(col_idx - 1, 0), min(col_idx + 2, self.width)):
                 if not include_self and (pos_row == row_idx and pos_col == col_idx):
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
+                new_coord = Coord(pos_col, pos_row)
+                ret[new_coord] = self.get(new_coord)
         return ret
 
-    def get_adjacent_bottom_right(self, col_idx: int, row_idx: int, include_diagonal=True):
+    def get_adjacent_bottom_right(self, coord:Coord, include_diagonal=True):
         ret = {}
+        col_idx = coord.y
+        row_idx = coord.x
         for pos_row in range(max(row_idx, 0), min(row_idx + 2, self.height)):
             for pos_col in range(max(col_idx, 0), min(col_idx + 2, self.width)):
                 if pos_row == row_idx and pos_col == col_idx:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret[(pos_col, pos_row)] = self.get(pos_col, pos_row)
+                new_coord = Coord(pos_col, pos_row)
+                ret[new_coord] = self.get(new_coord)
         return ret
 
     def find_all(self, val):
-        return [(idx_col, idx_row) for idx_row, row in enumerate(self._grid) for idx_col, y in enumerate(row) if
+        return [Coord(idx_col, idx_row) for idx_row, row in enumerate(self._grid) for idx_col, y in enumerate(row) if
                 val == y]
 
     def get_uniq_values(self):
@@ -287,6 +312,45 @@ class Grid:
     """
     ETC
     """
+
+    """
+    DIJKSTRA
+    """
+
+    def dijkstra(self, src: Coord, dest: Coord, include_diagonal=False):
+        prev = {}
+
+        # Store lowest cost so far to get to this point
+        path_costs = {src: 0}
+
+        unvisited = heapdict.heapdict()
+        for cell in self.cells:
+            unvisited[cell] = math.inf
+
+        # Cost of starting point are zero
+        unvisited[src] = 0
+
+        while unvisited:
+            u, cost = unvisited.popitem()
+
+            # Get all neighbours
+            for neighbour in self.get_adjacent(u.x, u.y, include_diagonal=include_diagonal, include_self=False):
+                # Cost of path *TO* v are cost of pat   h to u, plus cost of u (to v)
+                cost_of_path = path_costs.get(u, math.inf) + self.get(u.x, u.y)
+
+                if cost_of_path < path_costs.get(neighbour, math.inf):
+                    path_costs[neighbour] = cost_of_path
+                    unvisited[neighbour] = cost_of_path
+                    # Update the cheapest previous step for neighbour to u
+                    prev[neighbour] = u
+
+        path = [dest]
+        cur = dest
+        while prev.get(cur, None):
+            path.append(prev[cur])
+            cur = prev[cur]
+
+        return list(reversed(path))
 
     def print(self, sep='\n'):
         print(*self._grid, sep=sep)

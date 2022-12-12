@@ -1,9 +1,8 @@
 from collections import Counter, namedtuple
 import math
 import copy
-
 import heapdict
-
+from heapq import heappush, heappop
 
 class NoMostCommonException(Exception):
     pass
@@ -55,23 +54,26 @@ class Grid:
         retval = {}
         for row_idx in range(0, self.height):
             for col_idx in range(0, self.width):
-                retval[Coord(col_idx, row_idx)] = self.get(col_idx, row_idx)
+                retval[Coord(col_idx, row_idx)] = self.get2(col_idx, row_idx)
         return retval
 
     def cells_where(self, where_func):
         retval = {}
         for row_idx in range(0, self.height):
             for col_idx in range(0, self.width):
-                if where_func(self.get(col_idx, row_idx)):
-                    retval[Coord(col_idx, row_idx)] = self.get(col_idx, row_idx)
+                if where_func(self.get2(col_idx, row_idx)):
+                    retval[Coord(col_idx, row_idx)] = self.get2(col_idx, row_idx)
         return retval
 
     """
     GET methods
     """
 
-    def get(self, col_idx: int, row_idx: int):
+    def get2(self, col_idx: int, row_idx: int):
         return self._grid[row_idx][col_idx]
+
+    def get(self, coord: Coord):
+        return self._grid[coord.y][coord.x]
 
     def get_row(self, row_idx: int):
         return self._grid[row_idx]
@@ -199,7 +201,7 @@ class Grid:
 
     def add_all(self, add_val, conv_func=None):
         for col, row in self.cells.keys():
-            v = self.get(col, row) + add_val
+            v = self.get2(col, row) + add_val
             if conv_func:
                 v = conv_func(v)
             self.set(col, row, v)
@@ -247,7 +249,8 @@ class Grid:
     FINDING AND ADJACENT
     """
 
-    def get_adjacent(self, col_idx: int, row_idx: int, include_diagonal=True, include_self=False):
+    def get_adjacent(self, coord: Coord, include_diagonal=True, include_self=False):
+        col_idx, row_idx = coord
         ret = {}
         for pos_row in range(max(row_idx - 1, 0), min(row_idx + 2, self.height)):
             for pos_col in range(max(col_idx - 1, 0), min(col_idx + 2, self.width)):
@@ -255,10 +258,11 @@ class Grid:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret[Coord(pos_col, pos_row)] = self.get(pos_col, pos_row)
+                ret[Coord(pos_col, pos_row)] = self.get2(pos_col, pos_row)
         return ret
 
-    def get_adjacent_bottom_right(self, col_idx: int, row_idx: int, include_diagonal=True):
+    def get_adjacent_bottom_right(self, coord: Coord, include_diagonal=True):
+        col_idx, row_idx = coord
         ret = {}
         for pos_row in range(max(row_idx, 0), min(row_idx + 2, self.height)):
             for pos_col in range(max(col_idx, 0), min(col_idx + 2, self.width)):
@@ -266,7 +270,7 @@ class Grid:
                     continue
                 if not include_diagonal and not (pos_row == row_idx or pos_col == col_idx):
                     continue
-                ret[Coord(pos_col, pos_row)] = self.get(pos_col, pos_row)
+                ret[Coord(pos_col, pos_row)] = self.get2(pos_col, pos_row)
         return ret
 
     def find_all(self, val):
@@ -308,41 +312,45 @@ class Grid:
     """
     DIJKSTRA
     """
+    def dijkstra2(self, src: Coord, dest: Coord, include_diagonal=False, custom_cost_func=None, custom_allow_func=None):
+        cost_func = custom_cost_func if custom_cost_func else lambda _self, x: _self.get(x)
+        allow_func = custom_allow_func if custom_allow_func else lambda _self, current, nb: True  # allow every neighbour
 
-    def dijkstra(self, src: Coord, dest: Coord, include_diagonal=False):
-        prev = {}
-
+        predecessor = {}
+        shortest_distance = {}
+        
         # Store lowest cost so far to get to this point
-        path_costs = {src: 0}
+        heap = []
+        # heappush(heap, (cost_func(self, src), src, None))
+        heappush(heap, (0, src, None))
+        
+        while heap:
+            cost, node, prev = heappop(heap)
+            if node in shortest_distance:
+                # Already been here, prevent endless looping
+                continue
 
-        unvisited = heapdict.heapdict()
-        for cell in self.cells:
-            unvisited[cell] = math.inf
-
-        # Cost of starting point are zero
-        unvisited[src] = 0
-
-        while unvisited:
-            u, cost = unvisited.popitem()
-
-            # Get all neighbours
-            for neighbour in self.get_adjacent(u.x, u.y, include_diagonal=include_diagonal, include_self=False):
-                # Cost of path *TO* v are cost of path to u, plus cost of u (to v)
-                cost_of_path = path_costs.get(u, math.inf) + self.get(u.x, u.y)
-
-                if cost_of_path < path_costs.get(neighbour, math.inf):
-                    path_costs[neighbour] = cost_of_path
-                    unvisited[neighbour] = cost_of_path
-                    # Update the cheapest previous step for neighbour to u
-                    prev[neighbour] = u
-
-        path = [dest]
-        cur = dest
-        while prev.get(cur, None):
-            path.append(prev[cur])
-            cur = prev[cur]
-
-        return list(reversed(path))
+            shortest_distance[node] = cost
+            predecessor[node] = prev
+            
+            if node == dest:
+                # We have arrived
+                path = []
+                while node:
+                    path.append(node)
+                    node = predecessor[node]
+                return cost, path[::-1]
+            else:
+                neighbours = self.get_adjacent(node, include_diagonal=include_diagonal, include_self=False)
+                valid_neighbours = [neighbour for neighbour in neighbours if allow_func(self, node, neighbour)]
+                
+                # Push every adjacent node reachable from here to the heap, to continue looking
+                for successor in valid_neighbours:
+                    successor_cost = cost_func(self, successor)
+                    heappush(heap, (cost + successor_cost, successor, node))
+        
+        # Done, but no cigar
+        return math.inf, []
 
     def print(self, sep='\n'):
         print(*self._grid, sep=sep)

@@ -1,11 +1,31 @@
 import unittest
 from utils import grid
+from utils.grid import Coord
 
 
 class MyTestCase(unittest.TestCase):
     _alpha_grid_common_input = [['a', 'a', 'c'], ['a', 'e', 'f'], ['g', 'h', 'i']]
     _alpha_grid_rotate_input = [['a', 'b', 'c'], ['d', 'e', 'f'], ['g', 'h', 'i']]
     _int_grid_common_input = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+    _dijkstra1 = [[0, 4, 0, 0,  0,  0,  0, 8, 0],
+                  [4, 0, 8, 0,  0,  0,  0, 11, 0],
+                  [0, 8, 0, 7,  0,  4,  0, 0, 2],
+                  [0, 0, 7, 0,  9,  14, 0, 0, 0],
+                  [0, 0, 0, 9,  0,  10, 0, 0, 0],
+                  [0, 0, 4, 14, 10, 0,  2, 0, 0],
+                  [0, 0, 0, 0,  2,  0,  0, 1, 6],
+                  [8, 11, 0, 0, 0,  0,  4, 0, 4],
+                  [0, 0, 2, 0,  0,  0,  6, 7, 1]
+                ]
+    _dijkstra2 = [[1, 0, 1, 1, 1, 1, 0, 1, 1, 1 ],
+                  [1, 0, 1, 0, 1, 1, 1, 0, 1, 1 ],
+                  [1, 1, 1, 0, 1, 1, 0, 1, 0, 1 ],
+                  [0, 0, 0, 0, 1, 0, 0, 0, 0, 1 ],
+                  [1, 1, 1, 0, 1, 1, 1, 0, 1, 0 ],
+                  [1, 0, 1, 1, 1, 1, 0, 1, 0, 0 ],
+                  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1 ],
+                  [1, 0, 1, 1, 1, 1, 0, 1, 1, 1 ],
+                  [1, 1, 0, 0, 0, 0, 1, 0, 0, 1 ]]
 
     """
     Properties
@@ -21,9 +41,11 @@ class MyTestCase(unittest.TestCase):
 
     def test_get(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)
-        self.assertEqual('a', grid_under_test.get(0, 0))
-        self.assertEqual('e', grid_under_test.get(1, 1))
-        self.assertEqual('i', grid_under_test.get(2, 2))
+        self.assertEqual('a', grid_under_test.get(Coord(0, 0)))
+        self.assertEqual('e', grid_under_test.get(Coord(1, 1)))
+        self.assertEqual('i', grid_under_test.get(Coord(2, 2)))
+        self.assertEqual('f', grid_under_test.get(Coord(2, 1)))
+        self.assertEqual('h', grid_under_test.get(Coord(1, 2)))
 
     def test_cells(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)
@@ -153,11 +175,11 @@ class MyTestCase(unittest.TestCase):
 
     def test_add(self):
         grid_under_test = grid.Grid(self._int_grid_common_input)
-        self.assertEqual(7, grid_under_test.add_at(1, 1, 2).get(1,1))
+        self.assertEqual(7, grid_under_test.add_at(1, 1, 2).get(Coord(1,1)))
 
     def test_substract(self):
         grid_under_test = grid.Grid(self._int_grid_common_input)
-        self.assertEqual(3, grid_under_test.substract_at(1, 1, 2).get(1,1))
+        self.assertEqual(3, grid_under_test.substract_at(1, 1, 2).get(Coord(1,1)))
 
     """
     REPLACE methods
@@ -188,28 +210,83 @@ class MyTestCase(unittest.TestCase):
     """
     def test_adjacent_diagonal(self):
         grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
-        self.assertEqual(['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i'], list(grid_under_test.get_adjacent(1,1).values()))
-        self.assertEqual(['b', 'd', 'e'], list(grid_under_test.get_adjacent(0, 0).values()))
-        self.assertEqual(['b','c', 'e', 'h', 'i'], list(grid_under_test.get_adjacent(2, 1).values()))
+        l1 = list(grid_under_test.get_adjacent(Coord(1,1)).values())
+        l1.sort()
+        self.assertEqual(['a', 'b', 'c', 'd', 'f', 'g', 'h', 'i'], l1)
+
+        l2 = list(grid_under_test.get_adjacent(Coord(0, 0)).values())
+        l2.sort()
+        self.assertEqual(['b', 'd', 'e'], l2)
+
+        l3 = list(grid_under_test.get_adjacent(Coord(2, 1)).values())
+        l3.sort()
+        self.assertEqual(['b','c', 'e', 'h', 'i'], l3)
 
     def test_adjacent_exclude_diagonal(self):
         grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
-        self.assertEqual(['b', 'd', 'f', 'h'], list(grid_under_test.get_adjacent(1,1, False).values()))
-        self.assertEqual(['b', 'd' ], list(grid_under_test.get_adjacent(0, 0, False).values()))
-        self.assertEqual(['c', 'e', 'i'], list(grid_under_test.get_adjacent(2, 1, False).values()))
+        
+        l1 = list(grid_under_test.get_adjacent(Coord(1,1), False).values())
+        l1.sort()
+        self.assertEqual(['b', 'd', 'f', 'h'], l1)
+
+        l2 = list(grid_under_test.get_adjacent(Coord(0, 0), False).values())
+        l2.sort()
+        self.assertEqual(['b', 'd' ], l2)
+        
+        
+        l3 = list(grid_under_test.get_adjacent(Coord(2, 1), False).values())
+        l3.sort()
+        self.assertEqual(['c', 'e', 'i'], l3)
 
     def test_find_all(self):
         grid_under_test = grid.Grid(self._alpha_grid_common_input)
-        self.assertEqual([(0, 0), (1, 0), (0, 1)], grid_under_test.find_all('a'))
-        self.assertEqual([(2, 2)], grid_under_test.find_all('i'))
+        self.assertEqual([Coord(0, 0), Coord(1, 0), Coord(0, 1)], grid_under_test.find_all('a'))
+        self.assertEqual([Coord(2, 2)], grid_under_test.find_all('i'))
         self.assertEqual([], grid_under_test.find_all('foobar'))
+        
+        
+    def test_dijkstra(self):
+        grid_under_test = grid.Grid(self._dijkstra1)
+        cost, cheapest_path = grid_under_test.dijkstra2(Coord(0,0), Coord(8,8))
+        cost_of_cheapest_path = sum([grid_under_test.get(u) for u in cheapest_path])
+        
+        self.assertEqual(10, cost_of_cheapest_path)
+        self.assertEqual(10, cost)
+        self.assertEqual(19, len(cheapest_path))
+        self.assertEqual(cheapest_path, [Coord(x=0, y=0), Coord(x=0, y=1), Coord(x=0, y=2), Coord(x=0, y=3), Coord(x=0, y=4), Coord(x=0, y=5), Coord(x=0, y=6), Coord(x=1, y=6), Coord(x=2, y=6), Coord(x=2, y=7), Coord(x=3, y=7), Coord(x=4, y=7), Coord(x=5, y=7), Coord(x=5, y=6), Coord(x=6, y=6), Coord(x=7, y=6), Coord(x=7, y=7), Coord(x=8, y=7), Coord(x=8, y=8)])
+        
+    def test_dijkstra2(self):
+        class MyGrid(grid.Grid):
+            def custom_cost_func(self, coord):
+                return 1
+            
+        grid_under_test = MyGrid(self._dijkstra1)
+        
+        # If every step is just cost of 1, this path should be the shortest possible
+        cost, cheapest_path = grid_under_test.dijkstra2(Coord(0,0), Coord(8,8), custom_cost_func=MyGrid.custom_cost_func)
+        self.assertEqual(17, len(cheapest_path))
+        
+        # If every step is just cost of 1, this path should be the shortest possible. Allow diagonals
+        cost, cheapest_path = grid_under_test.dijkstra2(Coord(0, 0), Coord(8, 8), include_diagonal=True,
+                                                 custom_cost_func=MyGrid.custom_cost_func)
+        self.assertEqual(9, len(cheapest_path))
+        
 
-    # def test_merge_right(self):
-    #     grid_under_test = grid.Grid(self._alpha_grid_rotate_input)
-    #     grid2 = grid.Grid(self._alpha_grid_rotate_input)
-    #
-    #     grid_under_test.merge_right(grid2)
 
+    def test_dijkstra4(self):
+        class MyGrid(grid.Grid):
+            def custom_cost_func(self, coord):
+                return 1
+            
+            def custom_allow_func(self, current, neighbour):
+                return self.get(neighbour) > 0
+            
+        grid_under_test = grid.Grid(self._dijkstra1)
+
+        # If every step is just cost of 1, this path should be the shortest possible. Disallow zeros
+        cost, cheapest_path = grid_under_test.dijkstra2(Coord(0, 0), Coord(8, 8), include_diagonal=True, custom_cost_func=MyGrid.custom_cost_func, custom_allow_func=MyGrid.custom_allow_func)
+        self.assertEqual(10, len(cheapest_path))
+    
 
 if __name__ == '__main__':
     unittest.main()
