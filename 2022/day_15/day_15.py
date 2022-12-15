@@ -25,9 +25,9 @@ class Day15Solution(BaseSolution, ABC):
         for l in lines:
             xs, ys, xb, yb = list(map(int, re.findall(r"-?\d+", l)))
             self.input.append(((xs, ys), (xb, yb)))
-            # self.sensors.add((xs, ys))
-            # self.beacons.add((xb, yb))
-    
+            self.sensors.add((xs, ys))
+            self.beacons.add((xb, yb))
+           
     # @ftimer
     def get_x_range_for(self, y, sensor, beacon):
         max_distance = manhattan(sensor, beacon)
@@ -42,7 +42,7 @@ class Day15Solution(BaseSolution, ABC):
         y = line_nr
         for sensor, beacon in self.input:
             if r:= self.get_x_range_for(y, sensor, beacon):
-                for x in r and beacon:
+                for x in r:
                     self.no_beacons.add((x, y))
 
         a = len(self.no_beacons)

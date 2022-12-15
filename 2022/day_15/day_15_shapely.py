@@ -27,16 +27,21 @@ class Day15Solution(BaseSolution, ABC):
             self.sensors.add((xs, ys))
             self.beacons.add((xb, yb))
 
+    # @ftimer
+    def get_x_range_for(self, y, sensor, beacon):
+        max_distance = manhattan(sensor, beacon)
+        max_h_distance = max_distance - (abs(sensor[1] - y))
+
+        if max_h_distance > 0:
+            return range(sensor[0] - max_h_distance, sensor[0] + max_h_distance + 1)
+
     @ftimer
     def solve1(self, line_nr):
         self.no_beacons = set()
+        y = line_nr
         for sensor, beacon in self.input:
-            max_distance = manhattan(sensor, beacon)
-
-            for x in range(sensor[0] - max_distance, sensor[0] + max_distance):
-                y = line_nr
-                distance = manhattan((x, y), sensor)
-                if distance <= max_distance:
+            if r := self.get_x_range_for(y, sensor, beacon):
+                for x in r:
                     self.no_beacons.add((x, y))
 
         a = len(self.no_beacons)
