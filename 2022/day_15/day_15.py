@@ -58,18 +58,17 @@ class Day15Solution(BaseSolution, ABC):
                 if r := self.get_x_range_for(y, sensor, beacon):
                     ranges.append(r)
 
+            # Rows should be completely filled, so each start of range should be lower or equal to end of max of all previous
             sorted_ranges = sorted(ranges, key=lambda rng: rng[0])
-
-            # Rows should be filled, so each start of range should be lower or equal to end of max of all previous
             prev_range = sorted_ranges[0]
             mx_prev_range = prev_range.stop
+            
             for r in sorted_ranges[1:]:
                 mx_prev_range = max(mx_prev_range, prev_range.stop)
-
                 if prev_range.stop > max_y:
                     break
                     
-                # NOT ONLY PREV, BUT MAX OF ALL PREVS
+                # NOT ONLY PREV, BUT MAX OF ALL PREVS, DOH
                 if r.start > mx_prev_range:
                     return (prev_range.stop, y)
                 prev_range = r
