@@ -1,4 +1,6 @@
+import time
 import timeit
+from functools import wraps
 
 depth_of_nested_lists = lambda L: isinstance(L, list) and max(map(depth_of_nested_lists, L)) + 1
 
@@ -40,3 +42,15 @@ def most_common(lst):
 
 def least_common(lst):
     return min(set(lst), key=lst.count)
+
+
+def ftimer(func):
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs):
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print(f'Function {func.__name__}{args} {kwargs} Took {total_time:.5f} seconds')
+        return result
+    return timeit_wrapper

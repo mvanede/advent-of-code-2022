@@ -13,6 +13,8 @@ from day_09 import Day09Solution
 from day_10 import Day10Solution
 from day_11 import Day11Solution
 from day_12 import Day12Solution
+from day_13 import Day13Solution
+from day_14 import Day14Solution
 
 def test_day_01():
     s = Day01Solution(use_test_input=False)
@@ -79,15 +81,29 @@ def test_day_10():
     assert s2[160:200] == '#.#..#....#....#.#..#....#....#..#.#..#.'
     assert s2[200:240] == '#..#.####.####.#..#.####.#....#..#.#..#.'
 
+
 def test_day_11():
     s = Day11Solution(use_test_input=False)
     assert s.solve1() == 55930
     assert s.solve2() == 14636993466
 
+
 def test_day_12():
     s = Day12Solution(use_test_input=False)
     assert s.solve1() == 352
     assert s.solve2() == 345
-    
+
+
+def test_day_13():
+    s = Day13Solution(use_test_input=False)
+    assert s.solve1() == 5684
+    assert s.solve2() == 22932
+
+def test_day_14():
+    s = Day14Solution(use_test_input=False)
+    assert s.solve1() == 715
+    assert s.solve2() == 25248
+
+
 if __name__ == '__main__':
     sys.exit(pytest.main(["-k", "test_all"]))
