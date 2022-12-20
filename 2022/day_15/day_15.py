@@ -1,13 +1,8 @@
-import math
 import re
 from abc import ABC
-from shapely import Polygon
-import matplotlib.pyplot as plt
-import geopandas as gpd
 from utils import Parser
 from utils.lib import answer, ftimer
 from utils.base_solution import BaseSolution
-
 manhattan = lambda x, y: abs(x[0] - y[0]) + abs(x[1] - y[1])
 
 

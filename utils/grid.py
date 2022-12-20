@@ -105,6 +105,15 @@ class Grid:
         return Grid(copy.deepcopy(self._grid))
 
     """
+        DELETE methods
+    """
+    def delete_row(self, idx):
+        del self._grid[idx]
+    
+    def delete_rows(self, start_idx, end_idx):
+        del self._grid[start_idx: end_idx]
+    
+    """
     MOST AND LEAST COMMON methods
     """
 

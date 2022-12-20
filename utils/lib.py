@@ -54,3 +54,9 @@ def ftimer(func):
         print(f'Function {func.__name__}{args} {kwargs} Took {total_time:.5f} seconds')
         return result
     return timeit_wrapper
+
+def is_sublist(a, b):
+    for i in range(len(a) - len(b) + 1):
+        if a[i:i + len(b)] == b:
+            return True
+    return False
