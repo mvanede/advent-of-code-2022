@@ -1,46 +1,24 @@
+from enum import IntEnum
+from typing import NamedTuple
 
-class Location:
+Coord = NamedTuple('Coord', [('x', int), ('y', int)])
 
-    def __init__(self, col=0, row=0):
-        self._col = col
-        self._row = row
-        self.set_direction_map ('^', 'v','<', '>')
 
-    @property
-    def position(self):
-        return self._col, self._row
+class Direction(IntEnum):
+    EAST = 0
+    SOUTH = 1
+    WEST = 2
+    NORTH = 3
 
-    @property
-    def col(self):
-        return self._col
+    def __str__(self):
+        _str_map = {0: '>', 1: 'v', 2: '<', 3: '^'}
+        return _str_map[self.value]
 
-    @property
-    def row(self):
-        return self._row
+    def cw(self):
+        return Direction((self.value + 1) % 4)
 
-    def set(self, col, row):
-        self._col = col
-        self._row = row
+    def ccw(self):
+        return Direction((self.value - 1) % 4)
 
-    def up(self, n=1):
-        self._row -= n
-
-    def down(self, n=1):
-        self._row += n
-
-    def left(self, n=1):
-        self._col -= n
-
-    def right(self, n=1):
-        self._col += n
-
-    def go(self, direction_char):
-        self._direction_map[direction_char]()
-
-    def set_direction_map(self, up, down, left, right):
-        self._direction_map = {
-            up: self.up,
-            right: self.right,
-            left: self.left,
-            down: self.down
-        }
+    def t180(self):
+        return Direction((self.value + 2) % 4)

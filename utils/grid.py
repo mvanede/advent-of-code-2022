@@ -1,8 +1,14 @@
+import itertools
 from collections import Counter, namedtuple
 import math
 import copy
+from enum import Enum, IntEnum
+
 import heapdict
 from heapq import heappush, heappop
+
+from utils.location import Coord
+
 
 class NoMostCommonException(Exception):
     pass
@@ -11,10 +17,7 @@ class NoMostCommonException(Exception):
 class NoLeastCommonException(Exception):
     pass
 
-
-Coord = namedtuple('Coord', ['x', 'y'])
-
-
+    
 class Grid:
     _grid = [[]]
 
@@ -366,7 +369,8 @@ class Grid:
         print("")
 
     def pprint(self, sep=' ', end='\n'):
-        max_len = len(str(self.get_max_value()))
+        # max_len = len(str(self.get_max_value()))
+        max_len = max([len(str(x)) for x in self.flatten()])
         for row in self.rows:
             print(sep.join([str(col).ljust(max_len) for col in row]), end=end)
         print(end)
